@@ -1696,6 +1696,10 @@ class Spanner extends GrpcService {
       const gaxClient = this.clients_.get(clientName)!;
       let reqOpts = extend(true, {}, config.reqOpts);
       if (!this.projectIdReplaced_) {
+        // It would have been preferable to replace the projectId already in the
+        // constructor of Spanner, but that is not possible as auth.getProjectId
+        // is an async method. This is therefore the first place where we have
+        // access to the value that should be used instead of the placeholder.
         reqOpts = replaceProjectIdToken(reqOpts, projectId!);
         this.projectId = replaceProjectIdToken(this.projectId, projectId!);
         this.projectFormattedName_ = replaceProjectIdToken(
